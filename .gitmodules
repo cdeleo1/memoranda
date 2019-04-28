@@ -1,0 +1,3 @@
+[submodule "memoranda"]
+	path = memoranda
+	url = https://github.com/amehlhase316/memoranda
