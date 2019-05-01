@@ -118,23 +118,11 @@ public class TaskDialog extends JDialog {
             new ExceptionDialog(ex);
         }
     }
-    
-    void jbInit() throws Exception {
-	this.setResizable(false);
-	this.setSize(new Dimension(430,300));
-        border1 = BorderFactory.createEmptyBorder(5, 5, 5, 5);
-        border2 = BorderFactory.createEtchedBorder(Color.white, 
-            new Color(142, 142, 142));
-        border3 = new TitledBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0), 
-        Local.getString("To Do"), TitledBorder.LEFT, TitledBorder.BELOW_TOP);
-        border4 = BorderFactory.createEmptyBorder(0, 5, 0, 5);
-//        border5 = BorderFactory.createEmptyBorder();
-//        border6 = BorderFactory.createBevelBorder(BevelBorder.LOWERED,
-//            Color.white, Color.white, new Color(178, 178, 178),
-//            new Color(124, 124, 124));
-//        border7 = BorderFactory.createLineBorder(Color.white, 2);
-        border8 = BorderFactory.createEtchedBorder(Color.white, 
-            new Color(178, 178, 178));
+
+// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+// BEGIN TASK 1.3 (SPLIT UP METHOD THAT HAS MORE THAN 200 SLOC) | CDELEO1 - 30APR2019
+    void jButtonInit() {
+        // CANCEL BUTTON
         cancelB.setMaximumSize(new Dimension(100, 26));
         cancelB.setMinimumSize(new Dimension(100, 26));
         cancelB.setPreferredSize(new Dimension(100, 26));
@@ -144,17 +132,8 @@ public class TaskDialog extends JDialog {
                 cancelB_actionPerformed(e);
             }
         });
-
-        startDate = new JSpinner(new SpinnerDateModel(new Date(),null,null,Calendar.DAY_OF_WEEK));
-        endDate = new JSpinner(new SpinnerDateModel(new Date(),null,null,Calendar.DAY_OF_WEEK));
-		
-        chkEndDate.setSelected(false);
-		chkEndDate_actionPerformed(null);
-		chkEndDate.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				chkEndDate_actionPerformed(e);
-			}
-		});
+        
+        // OK BUTTON
         okB.setMaximumSize(new Dimension(100, 26));
         okB.setMinimumSize(new Dimension(100, 26));
         okB.setPreferredSize(new Dimension(100, 26));
@@ -165,13 +144,83 @@ public class TaskDialog extends JDialog {
             }
         });
         
+        // SET START DATE BUTTON
+        setStartDateB.setMinimumSize(new Dimension(24, 24));
+        setStartDateB.setPreferredSize(new Dimension(24, 24));
+        setStartDateB.setText("");
+        setStartDateB.setIcon(
+            new ImageIcon(main.java.memoranda.ui.AppFrame.class.getResource("/ui/icons/calendar.png")));
+        setStartDateB.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                setStartDateB_actionPerformed(e);
+            }
+        });
+        
+        // SET END DATE BUTTON
+        setEndDateB.setMinimumSize(new Dimension(24, 24));
+        setEndDateB.setPreferredSize(new Dimension(24, 24));
+        setEndDateB.setText("");
+        setEndDateB.setIcon(
+            new ImageIcon(main.java.memoranda.ui.AppFrame.class.getResource("/ui/icons/calendar.png")));
+        setEndDateB.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                setEndDateB_actionPerformed(e);
+            }
+        });
+        
+        // SET NOTIFICATION BUTTON
+        setNotifB.setText(Local.getString("Set notification"));
+        setNotifB.setIcon(
+            new ImageIcon(main.java.memoranda.ui.AppFrame.class.getResource("/ui/icons/notify.png")));
+        setNotifB.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                setNotifB_actionPerformed(e);
+            }
+        });
+        
+        // PRIORITY BUTTON
+        priorityCB.setSelectedItem(Local.getString("Normal"));
+        startCalFrame.cal.addSelectionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                if (ignoreStartChanged)
+                    return;
+                startDate.getModel().setValue(startCalFrame.cal.get().getCalendar().getTime());
+            }
+        });
+    }
+    void jbInit() throws Exception {
+        
+        this.setResizable(false);
+        this.setSize(new Dimension(430,300));
+        
+        // BORDER INITIALIZATIONS
+        border1 = BorderFactory.createEmptyBorder(5, 5, 5, 5);
+        border2 = BorderFactory.createEtchedBorder(Color.white, 
+                new Color(142, 142, 142));
+        border3 = new TitledBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0), 
+                Local.getString("To Do"), TitledBorder.LEFT, TitledBorder.BELOW_TOP);
+        border4 = BorderFactory.createEmptyBorder(0, 5, 0, 5);
+        border8 = BorderFactory.createEtchedBorder(Color.white, 
+                new Color(178, 178, 178));
+
+        startDate = new JSpinner(new SpinnerDateModel(new Date(),null,null,Calendar.DAY_OF_WEEK));
+        endDate = new JSpinner(new SpinnerDateModel(new Date(),null,null,Calendar.DAY_OF_WEEK));
+		
+        chkEndDate.setSelected(false);
+        chkEndDate_actionPerformed(null);
+        chkEndDate.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+               chkEndDate_actionPerformed(e);
+            }
+        });
+
         this.getRootPane().setDefaultButton(okB);
+        
         mPanel.setBorder(border1);
         areaPanel.setBorder(border2);
         dialogTitlePanel.setBackground(Color.WHITE);
         dialogTitlePanel.setBorder(border4);
-        //dialogTitlePanel.setMinimumSize(new Dimension(159, 52));
-        //dialogTitlePanel.setPreferredSize(new Dimension(159, 52));
+
         header.setFont(new java.awt.Font("Dialog", 0, 20));
         header.setForeground(new Color(0, 0, 124));
         header.setText(Local.getString("To do"));
@@ -198,9 +247,10 @@ public class TaskDialog extends JDialog {
         gbLayout.setConstraints(jLabelDescription,gbCon);
 
         descriptionField.setBorder(border8);
-        descriptionField.setPreferredSize(new Dimension(375, 387)); // 3 additional pixels from 384 so that the last line is not cut off
+        descriptionField.setPreferredSize(new Dimension(375, 387));
         descriptionField.setLineWrap(true);
         descriptionField.setWrapStyleWord(true);
+        
         gbCon = new GridBagConstraints();
         gbCon.gridwidth = GridBagConstraints.REMAINDER;
         gbCon.weighty = 3;
@@ -217,9 +267,8 @@ public class TaskDialog extends JDialog {
         startDate.setPreferredSize(new Dimension(80, 24));                
 		SimpleDateFormat sdf = new SimpleDateFormat();
 		sdf = (SimpleDateFormat)DateFormat.getDateInstance(DateFormat.SHORT);
-		// //Added by (jcscoobyrs) on 14-Nov-2003 at 10:45:16 PM
+		
 		startDate.setEditor(new JSpinner.DateEditor(startDate, sdf.toPattern()));
-
         startDate.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
             	// it's an ugly hack so that the spinner can increase day by day
@@ -249,32 +298,18 @@ public class TaskDialog extends JDialog {
         });
 
         jLabel6.setText(Local.getString("Start date"));
-        //jLabel6.setPreferredSize(new Dimension(60, 16));
         jLabel6.setMinimumSize(new Dimension(60, 16));
         jLabel6.setMaximumSize(new Dimension(100, 16));
-        setStartDateB.setMinimumSize(new Dimension(24, 24));
-        setStartDateB.setPreferredSize(new Dimension(24, 24));
-        setStartDateB.setText("");
-        setStartDateB.setIcon(
-            new ImageIcon(main.java.memoranda.ui.AppFrame.class.getResource("/ui/icons/calendar.png")));
-        setStartDateB.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                setStartDateB_actionPerformed(e);
-            }
-        });
+
         jLabel2.setMaximumSize(new Dimension(270, 16));
-        //jLabel2.setPreferredSize(new Dimension(60, 16));
         jLabel2.setHorizontalAlignment(SwingConstants.RIGHT);
         jLabel2.setText(Local.getString("End date"));
         endDate.setBorder(border8);
         endDate.setPreferredSize(new Dimension(80, 24));
         
-		endDate.setEditor(new JSpinner.DateEditor(endDate, sdf.toPattern())); //Added by (jcscoobyrs) on
-		//14-Nov-2003 at 10:45:16PM
-        
+		endDate.setEditor(new JSpinner.DateEditor(endDate, sdf.toPattern()));
         endDate.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
-            	// it's an ugly hack so that the spinner can increase day by day
             	SpinnerDateModel sdm = new SpinnerDateModel((Date)endDate.getModel().getValue(),null,null,Calendar.DAY_OF_WEEK);
             	endDate.setModel(sdm);
             	
@@ -299,28 +334,9 @@ public class TaskDialog extends JDialog {
                 ignoreEndChanged = false;
             }
         });
-        setEndDateB.setMinimumSize(new Dimension(24, 24));
-        setEndDateB.setPreferredSize(new Dimension(24, 24));
-        setEndDateB.setText("");
-        setEndDateB.setIcon(
-            new ImageIcon(main.java.memoranda.ui.AppFrame.class.getResource("/ui/icons/calendar.png")));
-        setEndDateB.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                setEndDateB_actionPerformed(e);
-            }
-        });
         
-        setNotifB.setText(Local.getString("Set notification"));
-        setNotifB.setIcon(
-            new ImageIcon(main.java.memoranda.ui.AppFrame.class.getResource("/ui/icons/notify.png")));
-        setNotifB.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                setNotifB_actionPerformed(e);
-            }
-        });
         jLabel7.setMaximumSize(new Dimension(100, 16));
         jLabel7.setMinimumSize(new Dimension(60, 16));
-        //jLabel7.setPreferredSize(new Dimension(60, 16));
         jLabel7.setText(Local.getString("Priority"));
 
         priorityCB.setFont(new java.awt.Font("Dialog", 0, 11));
@@ -346,7 +362,6 @@ public class TaskDialog extends JDialog {
         jPanel1.add(jLabel2, null);
         jPanel1.add(endDate, null);
         jPanel1.add(setEndDateB, null);
-        // added by rawsushi
         jPanel2.add(jPanelEffort, null);
         jPanelEffort.add(jLabelEffort, null);
         jPanelEffort.add(effortField, null);
@@ -361,15 +376,6 @@ public class TaskDialog extends JDialog {
         jPanelProgress.add(jLabelProgress, null);
         jPanelProgress.add(progress, null);
         jPanel2.add(jPanelProgress);
-        
-        priorityCB.setSelectedItem(Local.getString("Normal"));
-        startCalFrame.cal.addSelectionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                if (ignoreStartChanged)
-                    return;
-                startDate.getModel().setValue(startCalFrame.cal.get().getCalendar().getTime());
-            }
-        });
         
         endCalFrame.cal.addSelectionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
