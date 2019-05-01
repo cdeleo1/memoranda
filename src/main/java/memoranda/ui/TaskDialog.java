@@ -188,6 +188,7 @@ public class TaskDialog extends JDialog {
             }
         });
     }
+    
     void jbInit() throws Exception {
         
         this.setResizable(false);
