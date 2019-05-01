@@ -192,30 +192,32 @@ public class EventsManager {
 		return v;
 	}
 	
+	// TASK 2.1 (ADDED METHOD GETEVENTREPEAT) | CDELEO1 - 30APR2019
 	public static void getEventRepeat(CalendarDate date, Vector reps, Vector v, Event ev) {
 	    if (ev.getRepeat() == REPEAT_DAILY) {
             int n = date.getCalendar().get(Calendar.DAY_OF_YEAR);
             int ns =
                 ev.getStartDate().getCalendar().get(
                     Calendar.DAY_OF_YEAR);
-            if ((n - ns) % ev.getPeriod() == 0)
+            if ((n - ns) % ev.getPeriod() == 0) {
                 v.add(ev);
+            }
         } else if (ev.getRepeat() == REPEAT_WEEKLY) {
-            if (date.getCalendar().get(Calendar.DAY_OF_WEEK)
-                == ev.getPeriod())
+            if (date.getCalendar().get(Calendar.DAY_OF_WEEK) == ev.getPeriod()) {
                 v.add(ev);
+            }
         } else if (ev.getRepeat() == REPEAT_MONTHLY) {
-            if (date.getCalendar().get(Calendar.DAY_OF_MONTH)
-                == ev.getPeriod())
+            if (date.getCalendar().get(Calendar.DAY_OF_MONTH) == ev.getPeriod()) {
                 v.add(ev);
+            }
         } else if (ev.getRepeat() == REPEAT_YEARLY) {
             int period = ev.getPeriod();
-            if ((date.getYear() % 4) == 0
-                && date.getCalendar().get(Calendar.DAY_OF_YEAR) > 60)
+            if ((date.getYear() % 4) == 0 && date.getCalendar().get(Calendar.DAY_OF_YEAR) > 60) {
                 period++;
-
-            if (date.getCalendar().get(Calendar.DAY_OF_YEAR) == period)
+            }
+            if (date.getCalendar().get(Calendar.DAY_OF_YEAR) == period) {
                 v.add(ev);
+            }
         }
 	}
 
